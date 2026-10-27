@@ -36,7 +36,9 @@
 *{box-sizing:border-box}
 [hidden]{display:none!important}
 html,body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.45 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;-webkit-text-size-adjust:100%}
-main{max-width:520px;margin:0 auto;padding:calc(10px + env(safe-area-inset-top)) 16px calc(28px + env(safe-area-inset-bottom))}
+main{max-width:520px;margin:0 auto;padding:calc(10px + env(safe-area-inset-top)) 16px 0;display:flex;flex-direction:column;min-height:100vh;min-height:100dvh}
+/* Knöpfe kleben unten am Bildschirm. Wächst die Rechnung, läuft sie darunter durch. */
+#unten{position:sticky;bottom:0;z-index:5;margin:auto -16px 0;padding:4px 16px calc(6px + env(safe-area-inset-bottom));background:var(--bg);border-top:1px solid var(--line)}
 @media (min-width:700px){main{max-width:640px}}
 @media (max-width:370px){.seiten{gap:10px}}
 button{font:inherit;color:inherit;cursor:pointer;touch-action:manipulation;-webkit-user-select:none;user-select:none;-webkit-tap-highlight-color:transparent}
@@ -54,7 +56,7 @@ h1{font-size:1.05rem;font-weight:650;margin:0}
 .rund{width:42px;height:42px;border-radius:999px;border:1px solid var(--line);background:var(--paper);font-weight:700;font-size:1.05rem}
 
 /* Heftseite: Waage und Rechnung auf Karopapier */
-.heft{background-color:var(--paper);background-image:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px);background-size:20px 20px;background-position:-1px -1px;border:1px solid var(--line);border-radius:16px;overflow:hidden}
+.heft{margin-bottom:12px;background-color:var(--paper);background-image:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px);background-size:20px 20px;background-position:-1px -1px;border:1px solid var(--line);border-radius:16px;overflow:hidden}
 #bild{padding:4px 6px 0}
 svg#waage{display:block;width:100%;height:auto}
 .st{fill:var(--scale)}.bm{stroke:var(--scale);stroke-width:6;stroke-linecap:round}
@@ -67,29 +69,26 @@ svg#waage{display:block;width:100%;height:auto}
 .rahmen{fill:none;stroke:var(--accent);stroke-width:1.5;stroke-dasharray:4 3}
 .grp{transition:opacity .45s ease}.grp.weg{opacity:0}
 
-/* Feste Höhe, damit die Knöpfe nicht wandern. Neue Zeilen scrollen nach oben weg. */
-#kette{--zh:40px;--zeilen:3;--pad:10px;height:calc(var(--zeilen) * var(--zh) + 2 * var(--pad));padding:var(--pad) 8px;overflow:auto;overscroll-behavior:contain}
-#kette.mehr{-webkit-mask-image:linear-gradient(transparent,#000 26px);mask-image:linear-gradient(transparent,#000 26px)}
-#kette.frei{height:auto;-webkit-mask-image:none;mask-image:none}
+#kette{padding:10px 8px 14px;overflow-x:auto}
 #kette table{margin:0 auto;border-collapse:collapse;color:var(--ink);font-size:1.3rem;font-variant-numeric:tabular-nums lining-nums}
-#kette td{height:var(--zh);padding:0 4px;white-space:nowrap;vertical-align:middle}
+#kette td{height:40px;padding:0 4px;white-space:nowrap;vertical-align:middle}
 #kette .l{text-align:right}#kette .m{text-align:center;min-width:1.5em}#kette .r{text-align:left}
 #kette .o{color:var(--muted);font-size:.85em;padding-left:16px}
 #kette tr.akt td:not(.o){font-weight:600}
 #kette tr.rechnung td{font-size:.9em;color:var(--muted)}
 #kette tr.live td{color:var(--warn);font-weight:600}
 #kette tr.ok td:not(.o){color:var(--ok);font-weight:700}
-body[data-stufe="3"] #kette{--zeilen:6;--pad:16px}
+body[data-stufe="3"] #kette{padding:22px 8px}
 body[data-stufe="3"] #kette table{font-size:1.4rem}
-@media (min-width:700px){#kette table{font-size:1.55rem}body[data-stufe="3"] #kette{--zh:46px}body[data-stufe="3"] #kette table{font-size:1.8rem}}
+@media (min-width:700px){#kette table{font-size:1.55rem}body[data-stufe="3"] #kette table{font-size:1.8rem}}
 
-#meldung{min-height:24px;margin:12px 4px 0;text-align:center;font-size:.95rem;color:var(--muted)}
+#meldung{min-height:22px;margin:2px 4px 6px;text-align:center;font-size:.95rem;color:var(--muted)}
 #meldung.tipp{color:var(--accent)}
 #meldung.fehler{color:var(--warn)}
 #meldung button{margin-left:8px;padding:4px 12px;border-radius:999px;border:1px solid var(--accent);background:transparent;color:var(--accent);font-weight:600}
 
 /* Knöpfe: jeder Tipp ist ein Schritt, gleicher Aufbau in allen Stufen */
-#steuer{margin-top:12px}
+#steuer{margin-top:0}
 .seiten{display:grid;grid-template-columns:1fr 1fr;gap:16px}
 .mitte{max-width:260px;margin:0 auto}
 .feld{display:grid;grid-template-columns:1fr 1fr;gap:6px}
@@ -112,13 +111,13 @@ body[data-stufe="3"] #kette table{font-size:1.4rem}
 #feld{min-width:0;height:52px;padding:0 14px;font:inherit;font-size:1.2rem;color:var(--ink);border:1px solid var(--btn-line);border-radius:14px;background:var(--paper)}
 .knopf{min-height:52px;padding:0 18px;border:1px solid var(--btn-line);border-radius:14px;background:var(--btn);color:var(--btn-fg)}
 .knopf.primaer{background:var(--accent);color:var(--accent-fg);border-color:transparent;font-weight:600}
-.leiste{display:flex;justify-content:center;gap:14px;margin-top:10px}
-.leiste button{width:48px;height:48px;border-radius:999px;border:0;background:transparent;color:var(--muted);display:grid;place-items:center}
+.leiste{display:flex;justify-content:center;gap:14px;margin-top:4px}
+.leiste button{width:48px;height:44px;border-radius:999px;border:0;background:transparent;color:var(--muted);display:grid;place-items:center}
 .leiste button:disabled{opacity:.3;cursor:default}
 .leiste svg,.blatt svg.l{width:24px;height:24px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
 .ic{display:block}
 
-#ziel{text-align:center;margin-top:4px}
+#ziel{text-align:center;margin-top:4px;padding-bottom:10px}
 #ziel .jubel{font-size:1.25rem;font-weight:700;color:var(--ok)}
 #ziel .gross{display:inline-block;font-size:1.9rem;font-weight:700;color:var(--ok);margin-bottom:2px}
 #ziel .probe{color:var(--muted);font-variant-numeric:tabular-nums;margin-bottom:14px}
@@ -192,12 +191,10 @@ body.busy #steuer,body.busy .leiste,body.busy .wahlen{pointer-events:none;opacit
   </div>
 
   <section class="heft">
-    <div id="bild"><svg id="waage" viewBox="0 40 360 180" role="img"></svg></div>
+    <div id="bild"><svg id="waage" viewBox="0 40 360 156" role="img"></svg></div>
     <div id="kette"></div>
   </section>
 
-  <div id="steuer"></div>
-  <p id="meldung" role="status" aria-live="polite"></p>
   <div id="ziel" hidden>
     <div class="jubel" id="jubel"></div>
     <div class="erkl" id="erkl" hidden></div>
@@ -214,12 +211,16 @@ body.busy #steuer,body.busy .leiste,body.busy .wahlen{pointer-events:none;opacit
     </div>
   </div>
 
-  <nav class="leiste" aria-label="Werkzeuge">
-    <button type="button" id="tipp" aria-label="Tipp" title="Tipp"><svg viewBox="0 0 24 24"><path d="M9 18h6M10 21h4M12 3a6 6 0 0 0-3.6 10.8c.7.5 1.1 1.3 1.1 2.1V16h5v-.1c0-.8.4-1.6 1.1-2.1A6 6 0 0 0 12 3z"/></svg></button>
-    <button type="button" id="undo" aria-label="Rückgängig" title="Rückgängig"><svg viewBox="0 0 24 24"><path d="M9 14 4 9l5-5"/><path d="M4 9h10.5a5.5 5.5 0 0 1 0 11H11"/></svg></button>
-    <button type="button" id="neu" aria-label="Neue Aufgabe" title="Neue Aufgabe"><svg viewBox="0 0 24 24"><path d="M20 12a8 8 0 1 1-2.4-5.7"/><path d="M20 4v5h-5"/></svg></button>
-    <button type="button" id="eigen" aria-label="Eigene Aufgabe" title="Eigene Aufgabe"><svg viewBox="0 0 24 24"><path d="M4 20h4L19 9l-4-4L4 16v4z"/><path d="M13.5 6.5l4 4"/></svg></button>
-  </nav>
+  <div id="unten">
+    <p id="meldung" role="status" aria-live="polite"></p>
+    <div id="steuer"></div>
+    <nav class="leiste" aria-label="Werkzeuge">
+      <button type="button" id="tipp" aria-label="Tipp" title="Tipp"><svg viewBox="0 0 24 24"><path d="M9 18h6M10 21h4M12 3a6 6 0 0 0-3.6 10.8c.7.5 1.1 1.3 1.1 2.1V16h5v-.1c0-.8.4-1.6 1.1-2.1A6 6 0 0 0 12 3z"/></svg></button>
+      <button type="button" id="undo" aria-label="Rückgängig" title="Rückgängig"><svg viewBox="0 0 24 24"><path d="M9 14 4 9l5-5"/><path d="M4 9h10.5a5.5 5.5 0 0 1 0 11H11"/></svg></button>
+      <button type="button" id="neu" aria-label="Neue Aufgabe" title="Neue Aufgabe"><svg viewBox="0 0 24 24"><path d="M20 12a8 8 0 1 1-2.4-5.7"/><path d="M20 4v5h-5"/></svg></button>
+      <button type="button" id="eigen" aria-label="Eigene Aufgabe" title="Eigene Aufgabe"><svg viewBox="0 0 24 24"><path d="M4 20h4L19 9l-4-4L4 16v4z"/><path d="M13.5 6.5l4 4"/></svg></button>
+    </nav>
+  </div>
 </main>
 
 <div id="konfetti" aria-hidden="true"></div>
@@ -298,7 +299,6 @@ let lastKey = '';
 let angle = 0, anim = 0;
 let busy = false, divAnim = null;
 let viewTop = 40, viewBottom = 196;
-const VB_H = 180;
 let freshWin = false;
 const declined = {};
 
@@ -830,21 +830,18 @@ function drawScale() {
   // Platz nach unten für Finger, mit Spielraum fürs Kippen
   const fh = Math.max(...['L', 'R'].map(sd => { const F = fingerSize(S[sd]); return F ? F.h : 0; }));
   if (fh) viewBottom = Math.max(viewBottom, P.y - POST + 3 + 28 + fh);
-  // Das Bild hat immer dasselbe Seitenverhältnis, damit nichts darunter verrutscht.
-  // Braucht die Waage mehr Platz, wird sie kleiner gezeichnet statt höher.
-  const span = Math.max(VB_H, viewBottom - viewTop), vw = 360 * span / VB_H, vx = 180 - vw / 2, vb = viewTop + span;
   if (fh) {
-    g += `<defs><linearGradient id="fade" gradientUnits="userSpaceOnUse" x1="0" y1="${vb - 18}" x2="0" y2="${vb}">` +
+    g += `<defs><linearGradient id="fade" gradientUnits="userSpaceOnUse" x1="0" y1="${viewBottom - 18}" x2="0" y2="${viewBottom}">` +
          `<stop offset="0" stop-color="#fff"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></linearGradient>` +
-         `<mask id="fmask" maskUnits="userSpaceOnUse" x="${vx}" y="0" width="${vw}" height="${vb + 50}"><rect x="${vx}" y="0" width="${vw}" height="${vb + 50}" fill="url(#fade)"/></mask></defs>` +
-         `<g mask="url(#fmask)">` + finger(S.L, Lx, Ly - POST + 3, -1, vb) + finger(S.R, Rx, Ry - POST + 3, 1, vb) + '</g>';
+         `<mask id="fmask" maskUnits="userSpaceOnUse" x="0" y="0" width="360" height="${viewBottom + 50}"><rect x="0" y="0" width="360" height="${viewBottom + 50}" fill="url(#fade)"/></mask></defs>` +
+         `<g mask="url(#fmask)">` + finger(S.L, Lx, Ly - POST + 3, -1, viewBottom) + finger(S.R, Rx, Ry - POST + 3, 1, viewBottom) + '</g>';
   }
   g += `<rect x="${Lx - 75}" y="${Ly - POST - 3}" width="150" height="6" rx="3" class="pl"/>`;
   g += `<rect x="${Rx - 75}" y="${Ry - POST - 3}" width="150" height="6" rx="3" class="pl"/>`;
   const side = (sd, cx, yb) => divAnim && divAnim.sides.includes(sd) ? groupedObjects(S[sd], cx, yb, divAnim.k) : objects(S[sd], cx, yb);
   g += side('L', Lx, Ly - POST - 3) + side('R', Rx, Ry - POST - 3);
   const svg = $('waage');
-  svg.setAttribute('viewBox', `${vx} ${viewTop} ${vw} ${span}`);
+  svg.setAttribute('viewBox', `0 ${viewTop} 360 ${viewBottom - viewTop}`);
   svg.innerHTML = g;
   const r2 = rel();
   svg.setAttribute('aria-label', 'Waage. Links ' + desc(S.L) + ', rechts ' + desc(S.R) + '. ' +
@@ -897,15 +894,14 @@ function renderChain() {
     rows.push(`<tr class="notiz"><td colspan="4">Waage: ${weighText(true)}</td></tr>`);
     rows.push(row('ok', X, '=', term({ x: 0, n: S.x }), null));
   }
-  const k = $('kette');
-  k.innerHTML = '<table><tbody>' + rows.join('') + '</tbody></table>';
-  // Gelöst: ganze Rechnung zeigen. Sonst die neueste Zeile ins Fenster holen.
-  k.classList.toggle('frei', S.solved);
-  if (!S.solved) {
-    const top = k.scrollHeight - k.clientHeight;
-    if (top > k.scrollTop) k.scrollTo({ top, behavior: reduceMotion() ? 'auto' : 'smooth' });
-  }
-  k.classList.toggle('mehr', !S.solved && k.scrollHeight > k.clientHeight + 1);
+  $('kette').innerHTML = '<table><tbody>' + rows.join('') + '</tbody></table>';
+}
+// Die Knöpfe kleben unten. Was gerade neu ist, soll darüber zu sehen sein und nicht darunter verschwinden.
+function reveal(el) {
+  if (!el || el.hidden) return;
+  const bar = $('unten').getBoundingClientRect().top, r = el.getBoundingClientRect();
+  const d = Math.min(r.bottom - (bar - 8), r.top - 8);
+  if (d > 0) window.scrollBy({ top: d, behavior: reduceMotion() ? 'auto' : 'smooth' });
 }
 function weighText(kurz) {
   const { k, m } = S.weighed;
@@ -1005,7 +1001,8 @@ function render(instant) {
   renderControls();
   const z = $('ziel');
   z.hidden = !S.solved || entering;
-  if (S.solved && freshWin) {
+  const won = S.solved && freshWin;
+  if (won) {
     freshWin = false;
     $('jubel').textContent = S.weighed ? 'Stimmt!' : JUBEL[rnd(0, JUBEL.length - 1)];
     z.classList.remove('neu'); void z.offsetWidth; z.classList.add('neu');
@@ -1022,6 +1019,7 @@ function render(instant) {
   $('tipp').disabled = S.solved;
   $('undo').disabled = !S.hist.length || S.solved;
   if (stage < 3) animateTo(targetAngle(), instant);
+  reveal(won ? z : $('kette').querySelector('tr:last-child'));
 }
 
 function shake(b) {
